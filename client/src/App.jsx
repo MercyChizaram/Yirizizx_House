@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaSnapchat, FaThreads, FaTiktok, FaWhatsapp, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 import ProductCard from './components/ProductCard.jsx'
-import { getProducts, getSocialLinks } from './lib/sanity.js'
+import FashionVideoCard from './components/FashionVideoCard.jsx'
+import { getFashionVideos, getProducts, getSocialLinks } from './lib/sanity.js'
 
 const socialIcons = { instagram: FaInstagram, tiktok: FaTiktok, facebook: FaFacebookF, x: FaXTwitter, youtube: FaYoutube, pinterest: FaPinterestP, whatsapp: FaWhatsapp, threads: FaThreads, snapchat: FaSnapchat, linkedin: FaLinkedinIn }
 
 export default function App() {
   const [products, setProducts] = useState([])
+  const [fashionVideos, setFashionVideos] = useState([])
   const [socialLinks, setSocialLinks] = useState([])
   const [catalogState, setCatalogState] = useState('loading')
 
   useEffect(() => {
     const controller = new AbortController()
-    Promise.all([getProducts(controller.signal), getSocialLinks(controller.signal)])
-      .then(([items, links]) => {
+    Promise.all([getProducts(controller.signal), getSocialLinks(controller.signal), getFashionVideos(controller.signal)])
+      .then(([items, links, videos]) => {
         if (items) { setProducts(items); setCatalogState('connected') }
         if (links) setSocialLinks(links)
-        else setCatalogState('unconfigured')
+        if (videos) setFashionVideos(videos)
+        if (!items) setCatalogState('unconfigured')
       })
       .catch((error) => { if (error.name !== 'AbortError') setCatalogState('error') })
     return () => controller.abort()
@@ -52,6 +55,11 @@ export default function App() {
         <div className="product-grid">{products.map((product) => <ProductCard key={product._id} product={product} />)}</div>
         {products.length === 0 && <p className="empty-state">The collection is being prepared. Message us to ask about a custom piece.</p>}
         <p className="catalog-note" aria-live="polite">{catalogState === 'connected' ? 'Live collection · Updated by Yirizizx_House' : catalogState === 'error' ? 'The collection is temporarily unavailable. Please check back soon.' : ''}</p>
+      </section>
+
+      <section className="fashion-films" id="films">
+        <div className="section-heading"><div><p className="eyebrow">A CLOSER LOOK</p><h2>In motion<span>.</span></h2></div><span className="collection-count">THE YIRIZIZX FILM EDIT</span></div>
+        {fashionVideos.length > 0 ? <div className="fashion-video-grid">{fashionVideos.map((video) => <FashionVideoCard key={video._id} video={video} />)}</div> : <p className="empty-state">New film moments are coming soon.</p>}
       </section>
 
       <section className="contact-band"><p className="eyebrow light">MADE FOR YOUR MEASURE</p><h2>Let’s make it<br /><em>personal.</em></h2><a className="button button-outline" href={`https://wa.me/${(import.meta.env.VITE_WHATSAPP_NUMBER || '').replace(/\D/g, '')}?text=${encodeURIComponent('Hello Yirizizx_House! I would love to discuss a custom piece.')}`} target="_blank" rel="noreferrer">Talk to the designer <span>↗</span></a></section>

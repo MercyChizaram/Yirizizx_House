@@ -8,6 +8,10 @@ const query = `*[_type == "product" && isAvailable != false] | order(_createdAt 
 }`
 
 const socialQuery = `*[_type == "siteSettings"][0]{socialLinks[]{platform, url}}`
+const fashionVideoQuery = `*[_type == "fashionVideo" && defined(video.asset)] | order(_createdAt desc) {
+  _id, title, description, "videoUrl": video.asset->url,
+  "posterUrl": poster.asset->url, "posterAlt": poster.alt
+}`
 
 export async function getProducts(signal) {
   if (!projectId) return null
@@ -25,4 +29,13 @@ export async function getSocialLinks(signal) {
   if (!response.ok) throw new Error(`Sanity returned ${response.status}`)
   const { result } = await response.json()
   return result?.socialLinks || []
+}
+
+export async function getFashionVideos(signal) {
+  if (!projectId) return null
+  const url = `https://${projectId}.apicdn.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(fashionVideoQuery)}`
+  const response = await fetch(url, { signal })
+  if (!response.ok) throw new Error(`Sanity returned ${response.status}`)
+  const { result } = await response.json()
+  return result
 }
