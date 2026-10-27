@@ -16,3 +16,27 @@
 /* Sanity-managed short fashion clips */
 .fashion-films{padding:76px 8.5% 88px;background:#f7f6f2}.fashion-video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.fashion-video-card{min-width:0}.fashion-video{display:block;width:100%;aspect-ratio:.79;object-fit:cover;background:#d9d7d1}.fashion-video-caption{padding:14px 0 0}.fashion-video-caption h3{font-size:13px;font-weight:600;margin:0 0 5px}.fashion-video-caption p{font-size:10px;color:#77756e;line-height:1.5;margin:0}
 @media(max-width:700px){.fashion-films{padding:58px 6% 66px}.fashion-video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:27px 13px}.fashion-video-caption h3{font-size:12px}.fashion-video-caption p{font-size:9px}}
+
+/* Listing detail view */
+.product-image-link,.fashion-video-trigger,.details-trigger{font:inherit;color:inherit;cursor:pointer}
+.product-image-link{width:100%;padding:0;border:0;text-align:left}
+.details-trigger{background:none;border:0;border-top:1px solid #d8d6cf;justify-content:space-between}
+.fashion-video-trigger{display:block;width:100%;padding:0;border:0;background:transparent;text-align:left}
+.detail-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:rgba(20,19,17,.78);overflow-y:auto}
+.detail-dialog{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);width:min(1120px,100%);max-height:calc(100vh - 44px);overflow:auto;background:#f7f6f2;color:#22221f}
+.detail-close{position:absolute;z-index:2;top:14px;right:14px;width:42px;height:42px;border:1px solid rgba(34,34,31,.22);border-radius:50%;background:rgba(247,246,242,.92);color:#22221f;font-size:27px;line-height:1;cursor:pointer}
+.detail-media{display:grid;place-items:center;min-height:520px;background:#d9d7d1;overflow:hidden}
+.detail-visual{display:block;width:100%;height:100%;max-height:calc(100vh - 44px);object-fit:contain;background:#d9d7d1}
+.detail-placeholder{display:flex;min-height:520px;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#77756e;font-family:'Playfair Display',serif;font-size:64px}
+.detail-placeholder small{font:500 9px 'DM Sans',sans-serif;letter-spacing:.14em}
+.detail-copy{align-self:center;padding:62px clamp(28px,5vw,68px)}
+.detail-copy .eyebrow{margin-bottom:15px}
+.detail-copy h2{margin:0;font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,52px);line-height:1.05;font-weight:500;letter-spacing:-.04em}
+.detail-price{margin:14px 0 0;font-size:14px}
+.detail-description{margin:24px 0 0;color:#5f5d57;font-size:13px;line-height:1.85;white-space:pre-line}
+.detail-social-block{margin-top:34px;padding-top:20px;border-top:1px solid #d8d6cf}
+.detail-label{margin:0 0 14px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#77756e}
+.detail-social-links{justify-content:flex-start;flex-wrap:wrap}
+.detail-whatsapp{margin-top:28px;background:#292724;color:#f7f6f2;width:100%}
+.detail-whatsapp:hover{background:#a66f4c}
+@media(max-width:700px){.detail-backdrop{display:block;padding:0}.detail-dialog{display:block;width:100%;max-height:100dvh;min-height:100dvh}.detail-media{min-height:42vh;max-height:55vh}.detail-visual{width:100%;height:100%;min-height:42vh;max-height:55vh;object-fit:contain}.detail-placeholder{min-height:42vh}.detail-copy{padding:30px 7% 38px}.detail-copy h2{font-size:38px}.detail-description{margin-top:17px;font-size:12px}.detail-social-block{margin-top:24px}.detail-whatsapp{margin-top:22px}}

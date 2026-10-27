@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaSnapchat, FaThreads, FaTiktok, FaWhatsapp, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 import ProductCard from './components/ProductCard.jsx'
 import FashionVideoCard from './components/FashionVideoCard.jsx'
+import MediaDetailsDialog from './components/MediaDetailsDialog.jsx'
+import SocialLinks from './components/SocialLinks.jsx'
 import { getFashionVideos, getProducts, getSocialLinks } from './lib/sanity.js'
-
-const socialIcons = { instagram: FaInstagram, tiktok: FaTiktok, facebook: FaFacebookF, x: FaXTwitter, youtube: FaYoutube, pinterest: FaPinterestP, whatsapp: FaWhatsapp, threads: FaThreads, snapchat: FaSnapchat, linkedin: FaLinkedinIn }
 
 export default function App() {
   const [products, setProducts] = useState([])
   const [fashionVideos, setFashionVideos] = useState([])
   const [socialLinks, setSocialLinks] = useState([])
   const [catalogState, setCatalogState] = useState('loading')
+  const [selectedMedia, setSelectedMedia] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -52,19 +52,20 @@ export default function App() {
 
       <section className="collection" id="collection">
         <div className="section-heading"><div><p className="eyebrow">CURATED FOR YOU</p><h2>Selected pieces<span>.</span></h2></div><span className="collection-count">0{products.length} / THE CURRENT EDIT</span></div>
-        <div className="product-grid">{products.map((product) => <ProductCard key={product._id} product={product} />)}</div>
+        <div className="product-grid">{products.map((product) => <ProductCard key={product._id} product={product} onSelect={() => setSelectedMedia({ kind: 'product', ...product })} />)}</div>
         {products.length === 0 && <p className="empty-state">The collection is being prepared. Message us to ask about a custom piece.</p>}
         <p className="catalog-note" aria-live="polite">{catalogState === 'connected' ? 'Live collection · Updated by Yirizizx_House' : catalogState === 'error' ? 'The collection is temporarily unavailable. Please check back soon.' : ''}</p>
       </section>
 
       <section className="fashion-films" id="films">
         <div className="section-heading"><div><p className="eyebrow">A CLOSER LOOK</p><h2>In motion<span>.</span></h2></div><span className="collection-count">THE YIRIZIZX FILM EDIT</span></div>
-        {fashionVideos.length > 0 ? <div className="fashion-video-grid">{fashionVideos.map((video) => <FashionVideoCard key={video._id} video={video} />)}</div> : <p className="empty-state">New film moments are coming soon.</p>}
+        {fashionVideos.length > 0 ? <div className="fashion-video-grid">{fashionVideos.map((video) => <FashionVideoCard key={video._id} video={video} onSelect={() => setSelectedMedia({ kind: 'video', ...video })} />)}</div> : <p className="empty-state">New film moments are coming soon.</p>}
       </section>
 
       <section className="contact-band"><p className="eyebrow light">MADE FOR YOUR MEASURE</p><h2>Let’s make it<br /><em>personal.</em></h2><a className="button button-outline" href={`https://wa.me/${(import.meta.env.VITE_WHATSAPP_NUMBER || '').replace(/\D/g, '')}?text=${encodeURIComponent('Hello Yirizizx_House! I would love to discuss a custom piece.')}`} target="_blank" rel="noreferrer">Talk to the designer <span>↗</span></a></section>
 
-      <footer className="site-footer"><a className="wordmark" href="#top">YIRIZIZX<span>_</span>HOUSE</a><p>House for your Fashion Feels.</p><div className="social-links" aria-label="Social media">{socialLinks.map((account) => { const Icon = socialIcons[account.platform?.toLowerCase()]; return <a key={`${account.platform}-${account.url}`} href={account.url} target="_blank" rel="noreferrer" aria-label={`Visit Yirizizx House on ${account.platform}`} title={account.platform}>{Icon ? <Icon aria-hidden="true" /> : <span>{account.platform?.slice(0, 1).toUpperCase()}</span>}</a> })}</div><span>© {new Date().getFullYear()} YIRIZIZX_HOUSE</span></footer>
+      <footer className="site-footer"><a className="wordmark" href="#top">YIRIZIZX<span>_</span>HOUSE</a><p>House for your Fashion Feels.</p><SocialLinks links={socialLinks} className="social-links" /><span>© {new Date().getFullYear()} YIRIZIZX_HOUSE</span></footer>
+      {selectedMedia && <MediaDetailsDialog item={selectedMedia} socialLinks={socialLinks} onClose={() => setSelectedMedia(null)} />}
     </main>
   )
 }
